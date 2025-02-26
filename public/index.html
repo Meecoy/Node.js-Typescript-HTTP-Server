@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>HTTP server access</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="form">
+      <form class="form">
+        <h1>Get product/s</h1>
+        <label>Id:</label>
+        <input type="number" placeholder="Id of your product (Empty if all)" id="idGet" />
+        <input type="button" value="Send" onclick="getProductHandler()" />
+      </form>
+      <div class="output" id="output"></div>
+    </div>
+
+    <div class="form">
+      <form class="form">
+        <h1>Post product</h1>
+        <label>Id:</label>
+        <input type="number" placeholder="Id of your product" id="idPost" />
+        <label>Title:</label>
+        <input type="text" placeholder="Title of your product" class="title" id="title" />
+        <label>Description:</label>
+        <input type="text" placeholder="Description of your product" id="description" />
+        <label>Price:</label>
+        <input type="text" inputmode="numeric" class="product" id="price" />
+        <input type="button" value="Send" onclick="postProductHandler()" />
+      </form>
+
+      <div id="alert"></div>
+    </div>
+
+    <div class="form">
+      <form class="form">
+        <h1>Delete product</h1>
+        <label>Id:</label>
+        <input type="number" placeholder="Id" id="idDelete" />
+        <input type="button" value="Send" onclick="deleteProductHandler()" />
+      </form>
+      <div id="error "></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import("../build/renderer.js").catch((err) =>
+      console.error("Error loading renderer.js:", err),
+    );
+    import {
+      getProduct,
+      postProduct,
+      deleteProduct,
+    } from "../build/renderer.js";
+
+    // Global access of the getProductHandler()
+    window.getProductHandler = function () {
+      const input = document.getElementById("idGet");
+      const id = input && input.value ? Number(input.value) : null;
+      getProduct(id)
+        .then((product) => {
+          const productString = JSON.stringify(product, null, 2);
+          document.getElementById("output").innerHTML =
+            `<pre>${productString}</pre>`;
+        })
+        .catch((error) => {
+          console.error("Error fetching product data:", error);
+        });
+    };
+
+    window.postProductHandler = function () {
+      const id = document.getElementById("idPost").value;
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const price = document.getElementById("price").value;
+      const product = {
+        id: parseInt(id),
+        title: title,
+        description: description,
+        price: parseFloat(price),
+      };
+      postProduct(product).then(() => {
+        console.log("Product added succesfully");
+      });
+    };
+
+    window.deleteProductHandler = async function () {
+      const input = document.getElementById("idDelete");
+      const id = input && input.value ? Number(input.value) : null;
+
+      if (id) {
+        const result = await deleteProduct(id);
+        console.log(result);
+      } else {
+        console.log("Error while deleting the product.");
+      }
+    };
+  </script>
+</body>
+
+</html>

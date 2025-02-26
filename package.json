@@ -1,0 +1,27 @@
+{
+  "name": "typescript-http-server",
+  "version": "0.3.0",
+  "description": "Simple http server written in typescript for Node.js with GUI.",
+  "main": "build/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "tsc && electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "electron": "^34.2.0",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2",
+    "pm2": "^5.4.3",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/electron": "^1.4.38",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "typescript": "^5.7.3"
+  }
+}
